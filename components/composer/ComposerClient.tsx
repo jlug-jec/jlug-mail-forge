@@ -118,6 +118,10 @@ export default function ComposerClient({ initialEmailProvider }: ComposerClientP
     return null
   }
 
+  const handleContentChange = (value: string) => {
+    setContent(value);
+  };
+
   return (
     <>
       <motion.div
@@ -146,15 +150,20 @@ export default function ComposerClient({ initialEmailProvider }: ComposerClientP
             
             <div className="space-y-2">
               <label className="text-sm font-medium block">Content:</label>
-              <RichTextEditor value={content} />
+              <RichTextEditor 
+                value={content} 
+                onChange={(value) => handleContentChange(value)} 
+              />
             </div>
           </div>
 
-          <ActionButtons
-            onPreview={() => setShowPreview(true)}
-            onSaveDraft={saveDraft}
-            onReview={() => setShowReview(true)}
-          />
+          <div className="relative p-4 bg-gray-50 border-t">
+            <ActionButtons
+              onPreview={() => setShowPreview(true)}
+              onSaveDraft={saveDraft}
+              onReview={() => setShowReview(true)}
+            />
+          </div>
         </div>
       </motion.div>
 

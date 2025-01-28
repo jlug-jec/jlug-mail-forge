@@ -10,12 +10,13 @@ import { Editor } from "../../components/composer/Editor"
 import { isValidEmail } from '@/lib/utils'
 
 interface RichTextEditorProps {
-  value: string
+  value: string;
+  onChange: (value: string) => void;
 }
 
-export default function RichTextEditor({ value, }: RichTextEditorProps) {
+export default function RichTextEditor({ value, onChange }: RichTextEditorProps) {
   const [selectedField, setSelectedField] = useState<string | null>(null)
-  const { setEmails,selectedRecipients, availableFields } = useRecipientStore()
+  const { setEmails, selectedRecipients, availableFields } = useRecipientStore()
 
   const handleFieldSelect = (field: string) => {
     if (selectedRecipients.length === 0) {
@@ -63,7 +64,10 @@ export default function RichTextEditor({ value, }: RichTextEditorProps) {
           </Button>
         </div>
       </div>
-      <Editor value={value} />
+      <Editor 
+        value={value} 
+        onChange={onChange}
+      />
       <style jsx global>{`
         .ql-container {
           font-size: 16px;

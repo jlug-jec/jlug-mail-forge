@@ -8,36 +8,17 @@ const ReactQuill = dynamic(() => import("react-quill-new"), {
 })
 
 interface EditorProps {
-  value: string
-  modules?: any
+  value: string;
+  onChange?: (value: string) => void;
 }
 
-export function Editor({ value, modules }: EditorProps) {
-  const defaultModules = {
-    toolbar: [
-      [{ 'header': [1, 2, 3, false] }],
-      ['bold', 'italic', 'underline', 'strike'],
-      [{ 'list': 'ordered'}, { 'list': 'bullet' }],
-      [{ 'color': [] }, { 'background': [] }],
-      ['link', 'image'],
-      ['clean']
-    ]
-  }
-
+export function Editor({ value, onChange }: EditorProps) {
   return (
-    <ReactQuill
-      theme="snow"
-      value={value}
-      modules={modules || defaultModules}
-      formats={[
-        'header',
-        'bold', 'italic', 'underline', 'strike',
-        'list',
-        'color', 'background',
-        'link',
-        'image'
-      ]}
-      className="h-[400px] bg-white"
+    <ReactQuill 
+      theme="snow" 
+      value={value} 
+      onChange={onChange}
+      className="min-h-[200px]"
     />
   )
 }
