@@ -26,7 +26,7 @@ export default function ComposerClient({ initialEmailProvider }: ComposerClientP
   const [subject, setSubject] = useState("")
   const [showReview, setShowReview] = useState(false)
   const [isSending, setIsSending] = useState(false)
-  const [emailProvider, setEmailProvider] = useState(initialEmailProvider)
+  const [emailProvider] = useState(initialEmailProvider)
   const from = "jlug@Club.com"
   const [newEmail, setNewEmail] = useState("")
   const [showPreview, setShowPreview] = useState(false)
@@ -125,8 +125,14 @@ export default function ComposerClient({ initialEmailProvider }: ComposerClientP
         animate={{ opacity: 1, y: 0 }}
         className="container mx-auto p-2 sm:p-4 md:p-6 max-w-4xl"
       >
-        <div className="bg-white rounded-lg shadow-lg overflow-hidden">
-          <div className="p-3 sm:p-4 md:p-6 space-y-4 sm:space-y-6">
+        <h1 className="font-outfit text-3xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent mb-6">
+          Compose Email
+        </h1>
+        
+        <div className="relative bg-white/90 backdrop-blur-sm rounded-lg shadow-lg overflow-hidden">
+          <div className="absolute inset-0 bg-grid-pattern opacity-10" />
+          <div className="absolute inset-0 bg-gradient-to-br from-blue-500/10 via-transparent to-purple-500/10" />
+          <div className="relative p-3 sm:p-4 md:p-6 space-y-4 sm:space-y-6">
             <EmailForm
               from={from}
               subject={subject}

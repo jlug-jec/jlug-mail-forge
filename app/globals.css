@@ -50,3 +50,39 @@
   }
 }
 
+@layer base {
+  :root {
+    --font-inter: var(--font-inter);
+    --font-outfit: var(--font-outfit);
+  }
+}
+
+.bg-dot-pattern {
+  background-image: radial-gradient(
+    rgba(0, 0, 0, 0.05) 1px,
+    transparent 1px
+  );
+  background-size: 24px 24px;
+}
+
+.bg-grid-pattern {
+  background-image: linear-gradient(to right, #e5e7eb 1px, transparent 1px),
+    linear-gradient(to bottom, #e5e7eb 1px, transparent 1px);
+  background-size: 24px 24px;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  font-family: var(--font-outfit);
+}
+
+body {
+  font-family: var(--font-inter);
+}
+
+@media (prefers-color-scheme: dark) {
+  .bg-grid-dark {
+    background-image: linear-gradient(to right, #ffffff0a 1px, transparent 1px),
+      linear-gradient(to bottom, #ffffff0a 1px, transparent 1px);
+  }
+}
+

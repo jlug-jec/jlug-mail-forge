@@ -17,12 +17,12 @@ const menuItems = [
   {
     title: "Recipients",
     icon: Users,
-    href: "/recipients",
+    href: "/receipients",
   },
   {
     title: "Composer",
     icon: Mail,
-    href: "/composer",
+    href: "/compose",
   },
   {
     title: "Templates",

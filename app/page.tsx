@@ -18,9 +18,9 @@ export default async function  DashboardPage() {
         <Suspense fallback={<Skeleton className="h-[200px]" />}>
           <QuickActions />
         </Suspense>
-        {/* <Suspense fallback={<Skeleton className="h-[200px]" />}>
+        <Suspense fallback={<Skeleton className="h-[200px]" />}>
           <SystemStatus />
-        </Suspense> */}
+        </Suspense>
       </div>
     </div>
   )
