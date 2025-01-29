@@ -1,5 +1,8 @@
 import { Button } from "@/components/ui/button"
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover"
+import { useRouter } from 'next/navigation'
+import { useTemplateStore } from "@/store/template-store"
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu"
 
 interface FieldSelectorProps {
   selectedField: string | null
@@ -14,8 +17,13 @@ export function FieldSelector({
   availableFields,
   onFieldSelect,
 }: FieldSelectorProps) {
+  const router = useRouter()
+  const { selectedTemplate } = useTemplateStore()
+
   return (
-    <Popover>
+    <div className="flex flex-col sm:flex-row gap-2">
+
+      <Popover>
       <PopoverTrigger asChild>
         <Button variant="outline" size="sm" className="w-full sm:w-auto">
           <span className="truncate max-w-[150px]">
@@ -54,5 +62,6 @@ export function FieldSelector({
         )}
       </PopoverContent>
     </Popover>
+    </div>
   )
 }

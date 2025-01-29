@@ -2,7 +2,6 @@
 
 import { Button } from "@/components/ui/button"
 import { toast } from "sonner"
-import { setEmailProvider } from '@/lib/actions'
 import { useState } from "react"
 import Cookies from 'js-cookie'
 
@@ -23,7 +22,6 @@ export function EmailProviderForm({ defaultProvider }: EmailProviderFormProps) {
       sameSite: 'strict'
     })
     
-    await setEmailProvider(newProvider)
     setProvider(newProvider)
     toast.success(`Email provider changed to ${newProvider === 'smtp2go' ? 'SMTP2GO' : 'Gmail'}`)
   }
@@ -39,8 +37,8 @@ export function EmailProviderForm({ defaultProvider }: EmailProviderFormProps) {
             onChange={(e) => setProvider(e.target.value)}
             className="w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-all"
           >
-            <option value="gmail">Gmail</option>
             <option value="smtp2go">SMTP2GO</option>
+            <option value="gmail" disabled> Google (Coming Soon)</option>
           </select>
         </div>
       </div>

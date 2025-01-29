@@ -13,11 +13,8 @@ import { isValidEmail } from '@/lib/utils'
 
 import { render } from '@react-email/render';
 import { renderEmailContainer } from "../email/emailPreview"
+import RichTextEditor from "./RichTextEditor"
 
-const RichTextEditor = dynamic(() => import("@/components/composer/RichTextEditor"), {
-  ssr: false,
-  loading: () => <div className="h-[200px] border rounded-md bg-gray-50 animate-pulse" />
-})
 
 interface ComposerClientProps {
   initialEmailProvider: string
@@ -30,7 +27,7 @@ export default function ComposerClient({ initialEmailProvider }: ComposerClientP
   const [showReview, setShowReview] = useState(false)
   const [isSending, setIsSending] = useState(false)
   const [emailProvider] = useState(initialEmailProvider)
-  const from = "jlug@Club.com"
+  const [from, setFrom] = useState("")
   const [newEmail, setNewEmail] = useState("")
   const [showPreview, setShowPreview] = useState(false)
   const { emails, setEmails } = useRecipientStore()
@@ -84,7 +81,6 @@ export default function ComposerClient({ initialEmailProvider }: ComposerClientP
       toast.error("Please add at least one recipient email")
       return
     }
-    console.log(content)
     const reactComponent=renderEmailContainer(JSON.parse(content))
     const htmlContent = await render(reactComponent,{pretty: true})
 
@@ -154,6 +150,7 @@ export default function ComposerClient({ initialEmailProvider }: ComposerClientP
               newEmail={newEmail}
               setNewEmail={setNewEmail}
               addEmail={addEmail}
+              setFrom={setFrom}
             />
             
             <div className="space-y-2">

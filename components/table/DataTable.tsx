@@ -48,75 +48,37 @@ export function DataTable({
 
       <TableBody>
         <AnimatePresence mode="popLayout">
-          {paginatedData.map((item, index) => {
-            const { initial, animate, exit, transition, className } = renderTableRow(
-              item, 
-              index, 
-              selectedDomain, 
-              selectedItems, 
-              fields, 
-              expandedCells, 
-              toggleItem, 
-              toggleCellExpansion
-            )
-            return (
-              <motion.tr
-                key={index}
-                initial={initial}
-                animate={animate}
-                exit={exit}
-                transition={transition}
-                className={className}
-                layout
-              >
-                <TableCell>
-                  <Checkbox
-                    checked={selectedItems.includes(item)}
-                    onCheckedChange={() => toggleItem(item)}
-                  />
-                </TableCell>
+          {paginatedData.map((item, index) => (
+            <motion.tr
+              key={index}
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ 
+                opacity: 1, 
+                y: 0,
+                backgroundColor: selectedDomain === item.domain ? "rgba(59, 130, 246, 0.1)" : "transparent"
+              }}
+              exit={{ opacity: 0, y: -20 }}
+              transition={{ duration: 0.2, delay: index * 0.05 }}
+              className="group transition-colors text-base"
+              layout
+            >
+              <TableCell>
+                <Checkbox
+                  checked={selectedItems.includes(item)}
+                  onCheckedChange={() => toggleItem(item)}
+                />
+              </TableCell>
 
-                {fields.map(field => (
-                  <TableCell key={field}>
-                    {renderTableCell(item, field, index, expandedCells, toggleCellExpansion)}
-                  </TableCell>
-                ))}
-              </motion.tr>
-            )
-          })}
+              {fields.map(field => (
+                <TableCell key={field}>
+                  {renderTableCell(item, field, index, expandedCells, toggleCellExpansion)}
+                </TableCell>
+              ))}
+            </motion.tr>
+          ))}
         </AnimatePresence>
       </TableBody>
     </Table>
-  )
-}
-
-function renderTableRow(item: any, index: number, selectedDomain: string | null, selectedItems: any[], fields: string[], expandedCells: Set<string>, toggleItem: (item: any) => void, toggleCellExpansion: (key: string) => void) {
-  return (
-    <motion.tr
-      initial={{ opacity: 0, y: 20 }}
-      animate={{ 
-        opacity: 1, 
-        y: 0,
-        backgroundColor: selectedDomain === item.domain ? "rgba(59, 130, 246, 0.1)" : "transparent"
-      }}
-      exit={{ opacity: 0, y: -20 }}
-      transition={{ duration: 0.2, delay: index * 0.05 }}
-      className="group transition-colors text-base"
-      layout
-    >
-      <TableCell>
-        <Checkbox
-          checked={selectedItems.includes(item)}
-          onCheckedChange={() => toggleItem(item)}
-        />
-      </TableCell>
-
-      {fields.map(field => (
-        <TableCell key={field}>
-          {renderTableCell(item, field, index, expandedCells, toggleCellExpansion)}
-        </TableCell>
-      ))}
-    </motion.tr>
   )
 }
 

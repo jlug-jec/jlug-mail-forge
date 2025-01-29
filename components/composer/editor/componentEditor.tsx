@@ -1,5 +1,4 @@
-import { ComponentProps } from "../Editor"
-import { ColorPicker } from "./colorPicker"
+import { ComponentProps } from "./Editor"
 
 interface ComponentEditorProps {
     component: ComponentProps

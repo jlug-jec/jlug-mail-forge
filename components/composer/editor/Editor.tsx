@@ -9,6 +9,8 @@ export interface ComponentProps {
       color?: string
       borderColor?: string
       textAlign?: string
+      height?: string
+      width?: string
     }
     alt?: string
     href?: string
@@ -30,12 +32,12 @@ interface EditorProps {
 // components/Editor.tsx
 import { useEffect, useState } from "react"
 
-import { EmailPreview } from "./EmailPreview"
-import { Toolbar } from "./editor/toolbar"
-import { ComponentControls } from "./editor/componentControls"
-import { ComponentEditor } from "./editor/componentEditor"
+import { EmailPreview } from "../EmailPreview"
+import { Toolbar } from "./toolbar"
+import { ComponentControls } from "./componentControls"
+import { ComponentEditor } from "./componentEditor"
 import { useTemplateStore } from "@/store/template-store"
-import { templateToComponents } from "../templates/templateToComponent"
+import { templateToComponents } from "../../templates/templateToComponent"
 
 export function Editor({ value, onChange }: EditorProps) {
   const [components, setComponents] = useState<ComponentProps[]>(() => {

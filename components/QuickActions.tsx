@@ -1,13 +1,12 @@
 import { Plus} from "lucide-react"
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card"
-import { Button } from "@/components/ui/button"
 import { cookies } from 'next/headers'
 import { EmailProviderForm } from "./EmailProviderForm"
 import Link from 'next/link'
 
 export default async function QuickActions() {
   const cookieStore = await cookies()
-  const provider = cookieStore.get('emailProvider')?.value || 'gmail'
+  const provider = cookieStore.get('emailProvider')?.value || 'smtp2go'
   if(!provider) {
     return null
   }
@@ -33,4 +32,5 @@ export default async function QuickActions() {
     </div>
   )
 }
+
 

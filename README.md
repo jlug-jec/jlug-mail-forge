@@ -111,3 +111,12 @@ jlug-mail-forge/
 
 This project is licensed under the MIT License - see the LICENSE file for details.
 ```
+
+
+
+3) status of current emails
+4) any sheets can be loaded 
+
+image.png
+
+ 

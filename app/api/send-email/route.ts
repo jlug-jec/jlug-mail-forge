@@ -1,19 +1,52 @@
 import { NextResponse } from 'next/server';
-import { sendEmail } from '@/lib/email';
-import { cookies } from 'next/headers';
+
+interface EmailDetails {
+  to: string[];
+  subject: string;
+  html: string;
+  from: string;
+}
+
+async function sendEmail(emailDetails: EmailDetails) {
+  const headers = {
+    "Content-Type": "application/json",
+    "X-Smtp2go-Api-Key": process.env.SMTP2GO_API_KEY
+  };
+
+  const body = JSON.stringify({
+    "sender": process.env.SENDER_EMAIL,
+    "to": emailDetails.to,
+    "subject": emailDetails.subject,
+    "html_body": emailDetails.html
+  });
+
+  try {
+    const response = await fetch("https://api.smtp2go.com/v3/email/send", {
+      method: "POST",
+      headers,
+      body
+    });
+    
+    const result = await response.json();
+    if (!response.ok) {
+      throw new Error(result.message || 'Failed to send email');
+    }
+    
+    return { success: true, result };
+  } catch (error) {
+    console.error('Error sending email:', error);
+    return { success: false, error };
+  }
+}
 
 export async function POST(request: Request) {
   try {
     const body = await request.json();
-    const cookieStore = await cookies();
-    const provider = cookieStore.get('emailProvider')?.value || 'gmail';
-
     const result = await sendEmail({
       to: body.to,
       subject: body.subject,
       html: body.content,
-      from: body.from,
-      provider: provider as 'gmail' | 'smtp2go'
+      from: body.from
     });
 
     if (!result.success) {

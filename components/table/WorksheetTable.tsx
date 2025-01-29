@@ -7,15 +7,19 @@ import { TableFilters } from "./TableFilters"
 import { DataTable } from "./DataTable"
 import { TablePagination } from "./TablePagination"
 import { LoadingSpinner } from "@/components/ui/loading-spinner"
+import { toast } from "sonner"
+import { useSheetStore } from '@/store/sheet-store'
 
 
 interface WorksheetTableProps {
-  initialSheets: any[]
-  initialWorksheet?: string
+  initialSheets: Array<{ title: string; index: number }>;
+  initialWorksheet: string;
+  sheetId: string;  // Add sheetId to props
 }
 
-export default function WorksheetTable({ initialSheets, initialWorksheet }: WorksheetTableProps) {
-  const [currentSheet, setCurrentSheet] = useState(initialWorksheet || initialSheets[0]?.title)
+export default function WorksheetTable({ initialSheets, initialWorksheet, sheetId }: WorksheetTableProps) {
+  const { setSelectedSheet } = useSheetStore()
+  const [currentSheet, setCurrentSheet] = useState(initialWorksheet)
   const [sheetData, setSheetData] = useState<any>(null)
   const [loading, setLoading] = useState(true)
   const [selectedDomain, setSelectedDomain] = useState<string | null>(null)
@@ -58,20 +62,30 @@ export default function WorksheetTable({ initialSheets, initialWorksheet }: Work
 
   // Effects and other hooks
   useEffect(() => {
+
     async function fetchSheetData() {
       setLoading(true)
       try {
-        const response = await fetch(`/api/sheets?worksheet=${currentSheet}`)
+        const response = await fetch(`/api/sheets?worksheet=${currentSheet}&sheetId=${sheetId}`)
         const data = await response.json()
+        if (!response.ok || !data.data || data.data.length === 0) {
+          toast.error('No data found in sheet, Choose another sheet')
+          setCurrentSheet(initialWorksheet)
+          setSelectedSheet(initialWorksheet) // Update store
+          return
+        }
         setSheetData(data)
       } catch (error) {
         console.error('Error fetching sheet data:', error)
+        setCurrentSheet(initialWorksheet)
+        setSelectedSheet(initialWorksheet) // Update store
+      } finally {
+        setLoading(false)
       }
-      setLoading(false)
     }
 
-    if (currentSheet) fetchSheetData()
-  }, [currentSheet])
+    if (currentSheet && sheetId) fetchSheetData()
+  }, [currentSheet, sheetId, initialWorksheet, setSelectedSheet])
 
   useEffect(() => {
     if (sheetData?.data) {

@@ -1,16 +1,18 @@
 import { NextResponse } from 'next/server';
 import { getSheetDocuments, getWorksheetData } from '@/lib/google-sheets';
 
-if (!process.env.GOOGLE_SHEETS_ID) {
-  throw new Error('GOOGLE_SHEETS_ID is not defined in environment variables');
-}
-
-const sheetId = process.env.GOOGLE_SHEETS_ID;
-
 export async function GET(request: Request) {
   try {
     const { searchParams } = new URL(request.url);
     const worksheetName = searchParams.get('worksheet');
+    const sheetId = searchParams.get('sheetId') || process.env.GOOGLE_SHEETS_ID;
+
+    if (!sheetId) {
+      return NextResponse.json(
+        { error: 'Sheet ID is required' },
+        { status: 400 }
+      );
+    }
 
     if (!worksheetName) {
       const sheets = await getSheetDocuments(sheetId);

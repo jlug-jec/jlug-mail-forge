@@ -1,6 +1,7 @@
 import { CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { Select, SelectTrigger, SelectValue, SelectContent, SelectItem } from "@/components/ui/select"
+import { useSheetStore } from "@/store/sheet-store"
 
 interface TableHeaderProps {
   currentSheet: string
@@ -31,6 +32,15 @@ export function TableHeader({
   setSelectedRecipients,
   setSelectedDomain
 }: TableHeaderProps) {
+  const { setSheetId, setSelectedSheet, setAvailableSheets } = useSheetStore()
+
+  const handleImportNewSheet = () => {
+    setSheetId(null)
+    setSelectedSheet(null)
+    setAvailableSheets([])
+    window.location.reload()
+  }
+
   return (
     <div className="flex flex-col gap-4 sm:flex-row sm:justify-between sm:items-center">
       <CardTitle className="text-xl font-semibold truncate max-w-[300px]">
@@ -39,6 +49,14 @@ export function TableHeader({
       
       <div className="flex flex-col gap-2 sm:flex-row sm:items-center">
         <div className="flex flex-col sm:flex-row gap-2">
+          <Button 
+            variant="outline" 
+            size="sm"
+            onClick={handleImportNewSheet}
+            className="w-full sm:w-auto"
+          >
+            Import Another Sheet
+          </Button>
           <Button 
             variant="outline" 
             size="sm" 

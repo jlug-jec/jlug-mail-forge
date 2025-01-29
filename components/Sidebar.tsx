@@ -44,7 +44,10 @@ export default function Sidebar() {
       <div className="p-4 border-b flex items-center justify-between">
         {!isCollapsed && (
           <motion.h1 initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="text-xl font-bold">
-            EmailPro
+            <div className="flex items-center">
+              <img src="https://jlug.club/assets/JLUG-b26f7b6c.jpg" alt="JLUG Logo" className="h-6 mr-2" />
+              JLUG MAIL FORGE
+            </div>
           </motion.h1>
         )}
         <Button variant="ghost" size="icon" onClick={() => setIsCollapsed(!isCollapsed)}>
@@ -67,17 +70,6 @@ export default function Sidebar() {
           </Link>
         ))}
       </nav>
-      <div className="p-4 border-t">
-        <div className="flex items-center space-x-3">
-          <div className="w-8 h-8 rounded-full bg-gray-200" />
-          {!isCollapsed && (
-            <div>
-              <div className="font-medium">John Doe</div>
-              <div className="text-sm text-gray-500">john@example.com</div>
-            </div>
-          )}
-        </div>
-      </div>
     </motion.div>
   )
 }

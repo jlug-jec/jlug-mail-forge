@@ -6,7 +6,7 @@ import {
   DialogHeader,
   DialogTitle,
 } from '@/components/ui/dialog'
-import { TEMPLATES } from '@/lib/templates'
+import { TEMPLATES } from '@/components/templates/templates'
 
 interface TemplateSelectorProps {
   onSelect: (template: string) => void

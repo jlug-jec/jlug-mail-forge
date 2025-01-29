@@ -1,4 +1,4 @@
-import { TEMPLATES } from "@/lib/templates";
+import { TEMPLATES } from "@/components/templates/templates";
 import TemplateList from "@/components/templates/template-list";
 
 

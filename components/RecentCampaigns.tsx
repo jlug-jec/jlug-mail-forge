@@ -1,27 +1,84 @@
 "use client"
 
-import { useMemo, useState } from "react"
+import { useEffect, useMemo, useState } from "react"
 import { AnimatePresence, motion } from "framer-motion"
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
-import { Badge } from "@/components/ui/badge"
+
 import { Button } from "@/components/ui/button"
 import { ChevronLeft, ChevronRight } from "lucide-react"
 
-const campaigns = [
-]
+
 
 const ITEMS_PER_PAGE = 5
 
 export default function RecentCampaigns() {
+  interface Campaign {
+    subject: string;
+    from: string;
+    to: string;
+    sentDate: string;
+  }
+  
+  // Update the state type
+  const [campaigns, setCampaigns] = useState<Campaign[]>([])
+  const [loading, setLoading] = useState(true)
+  const [error, setError] = useState<string | null>(null)
   const [currentPage, setCurrentPage] = useState(1)
-  const totalPages = Math.ceil(campaigns.length / ITEMS_PER_PAGE)
+  const [dateRange, setDateRange] = useState<{
+    from: Date | undefined
+    to: Date | undefined
+  }>({
+    from: new Date(Date.now() - 7 * 24 * 60 * 60 * 1000),
+    to: new Date()
+  })
 
+  useEffect(() => {
+    async function fetchCampaigns() {
+      try {
+        setLoading(true)
+        const params = new URLSearchParams({
+          startDate: dateRange.from?.toISOString() || '',
+          endDate: dateRange.to?.toISOString() || ''
+        })
+        const response = await fetch(`/api/campaigns?${params}`)
+        if (!response.ok) throw new Error('Failed to fetch campaigns')
+        const data = await response.json()
+        setCampaigns(data)
+        setError(null)
+      } catch (err) {
+        setError('Failed to load campaigns')
+        console.error(err)
+      } finally {
+        setLoading(false)
+      }
+    }
+
+    fetchCampaigns()
+  }, [dateRange])
+
+  const totalPages = Math.ceil(campaigns.length / ITEMS_PER_PAGE)
   const startIndex = (currentPage - 1) * ITEMS_PER_PAGE
   const endIndex = startIndex + ITEMS_PER_PAGE
   const paginatedCampaigns = useMemo(() => 
     campaigns.slice(startIndex, endIndex),
-    [startIndex, endIndex]
+    [campaigns, startIndex, endIndex]
   )
+
+  if (loading) {
+    return (
+      <div className="rounded-lg border bg-white p-8 flex justify-center items-center">
+        <div className="w-6 h-6 border-2 border-blue-600 border-t-transparent rounded-full animate-spin" />
+      </div>
+    )
+  }
+
+  if (error) {
+    return (
+      <div className="rounded-lg border bg-white p-8 text-center text-red-500">
+        {error}
+      </div>
+    )
+  }
 
   const handlePageChange = (newPage: number) => {
     if (newPage >= 1 && newPage <= totalPages) {
@@ -38,10 +95,10 @@ export default function RecentCampaigns() {
       <Table>
         <TableHeader>
           <TableRow>
-            <TableHead className="whitespace-nowrap">CAMPAIGN</TableHead>
-            <TableHead className="whitespace-nowrap">STATUS</TableHead>
-            <TableHead className="whitespace-nowrap">RECIPIENTS</TableHead>
-            <TableHead className="whitespace-nowrap">SENT DATE</TableHead>
+            <TableHead className="whitespace-nowrap">Subject</TableHead>
+            <TableHead className="whitespace-nowrap">From</TableHead>
+            <TableHead className="whitespace-nowrap">To</TableHead>
+            <TableHead className="whitespace-nowrap">Date</TableHead>
           </TableRow>
         </TableHeader>
         <TableBody className="relative" style={{ minHeight: `${ITEMS_PER_PAGE * 53}px` }}>
@@ -55,14 +112,12 @@ export default function RecentCampaigns() {
                 transition={{ duration: 0.2 }}
                 className="border-b"
               >
-                <TableCell className="font-medium min-w-[180px]">{campaign.name}</TableCell>
-                <TableCell className="min-w-[120px]">
-                  <Badge variant="secondary" className='bg-green-100 text-green-800'>
-                    {campaign.status.charAt(0).toUpperCase() + campaign.status.slice(1)}
-                  </Badge>
+                <TableCell className="font-medium min-w-[180px]">{campaign.subject}</TableCell>
+                <TableCell className="min-w-[200px]">{campaign.from}</TableCell>
+                <TableCell className="min-w-[200px]">{campaign.to}</TableCell>
+                <TableCell className="min-w-[150px]">
+                  {new Date(campaign.sentDate).toLocaleString()}
                 </TableCell>
-                <TableCell className="min-w-[100px]">{campaign.recipients.toLocaleString()}</TableCell>
-                <TableCell className="min-w-[100px]">{new Date(campaign.sentDate).toLocaleDateString()}</TableCell>
               </motion.tr>
             ))}
             {Array.from({ length: ITEMS_PER_PAGE - paginatedCampaigns.length }).map((_, i) => (

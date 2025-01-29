@@ -6,7 +6,7 @@ import { useRecipientStore } from '@/store/recipientStore'
 import { Button } from '@/components/ui/button'
 import { toast } from "sonner"
 import { FieldSelector } from "../../components/composer/FieldSelector"
-import { Editor } from "../../components/composer/Editor"
+import { Editor } from "./editor/Editor"
 import { isValidEmail } from '@/lib/utils'
 
 interface RichTextEditorProps {

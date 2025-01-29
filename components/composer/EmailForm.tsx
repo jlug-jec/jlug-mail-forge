@@ -12,11 +12,13 @@ interface EmailFormProps {
   newEmail: string
   setNewEmail: (email: string) => void
   addEmail: () => void
+  setFrom:(value: string) => void
 }
 
 export function EmailForm({
   from,
   subject,
+  setFrom,
   setSubject,
   emails,
   setEmails,
@@ -28,7 +30,12 @@ export function EmailForm({
     <div className="space-y-4">
       <div className="flex flex-col sm:flex-row sm:items-center sm:space-x-4 space-y-2 sm:space-y-0">
         <label className="w-full sm:w-20 text-sm font-medium">From:</label>
-        <span className="text-sm sm:text-base">{from}</span>
+        <Input
+          value={from}
+          onChange={(e) => setFrom(e.target.value)}
+          placeholder="Enter sender email"
+          className="flex-1"
+        />
       </div>
 
       <div className="flex flex-col sm:flex-row sm:items-center sm:space-x-4 space-y-2 sm:space-y-0">
