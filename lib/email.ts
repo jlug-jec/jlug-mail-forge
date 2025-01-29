@@ -37,6 +37,8 @@ async function sendWithSmtp2go(emailDetails: EmailDetails) {
     "X-Smtp2go-Api-Key": process.env.SMTP2GO_API_KEY
   };
 
+  console.log(emailDetails)
+
   const raw = JSON.stringify({
     "sender": process.env.SENDER_EMAIL,
     "to": emailDetails.to,

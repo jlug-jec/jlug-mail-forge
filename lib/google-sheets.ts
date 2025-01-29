@@ -1,4 +1,5 @@
 import { google } from 'googleapis';
+import { sheets_v4 } from 'googleapis';
 
 if (!process.env.GOOGLE_SHEETS_API_KEY) {
   throw new Error('GOOGLE_SHEETS_API_KEY is not defined in environment variables');
@@ -6,7 +7,7 @@ if (!process.env.GOOGLE_SHEETS_API_KEY) {
 
 const API_KEY = process.env.GOOGLE_SHEETS_API_KEY;
 
-const sheets = google.sheets({ 
+export const sheets = google.sheets({ 
   version: 'v4', 
   auth: API_KEY
 });
@@ -18,9 +19,12 @@ interface SheetProperties {
   sheetType: string | null;
 }
 
+type SheetResponse = sheets_v4.Schema$Spreadsheet;
+type ValueResponse = sheets_v4.Schema$ValueRange;
+
 async function handleSheetRequest<T>(
-  requestFn: () => Promise<any>,
-  transformFn: (data: any) => T
+  requestFn: () => Promise<{ data: SheetResponse | ValueResponse }>,
+  transformFn: (data: SheetResponse | ValueResponse) => T
 ): Promise<T> {
   try {
     const response = await requestFn();
@@ -37,12 +41,16 @@ export async function getSheetDocuments(sheetId: string): Promise<SheetPropertie
       spreadsheetId: sheetId,
       includeGridData: false,
     }),
-    (data) => data.sheets?.map((sheet: any) => ({
-      id: sheet.properties?.sheetId,
-      title: sheet.properties?.title,
-      index: sheet.properties?.index,
-      sheetType: sheet.properties?.sheetType
-    })) || []
+    (data) => {
+      // Type assertion to ensure we're working with a Spreadsheet response
+      const spreadsheetData = data as sheets_v4.Schema$Spreadsheet;
+      return spreadsheetData.sheets?.map((sheet) => ({
+        id: sheet.properties?.sheetId ?? null,
+        title: sheet.properties?.title ?? null,
+        index: sheet.properties?.index ?? null,
+        sheetType: sheet.properties?.sheetType ?? null
+      })) || [];
+    }
   );
 }
 
@@ -55,7 +63,8 @@ export async function getWorksheetData(sheetId: string, worksheetName: string): 
       dateTimeRenderOption: 'FORMATTED_STRING'
     }),
     (data) => {
-      const rows = data.values || [];
+      const valueData = data as sheets_v4.Schema$ValueRange;
+      const rows = valueData.values || [];
       if (rows.length === 0) return [];
 
       const headers = rows[0];

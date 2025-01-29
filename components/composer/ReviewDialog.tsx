@@ -32,6 +32,7 @@ export function ReviewDialog({
         </DialogHeader>
         
         <EmailPreview
+          preview={true}
           open={open}
           onOpenChange={onOpenChange}
           from={from}
@@ -39,7 +40,7 @@ export function ReviewDialog({
           subject={subject}
           content={content}
         >
-              <div className="sticky bottom-0 left-0 right-0 flex justify-end gap-2 pt-4 mt-4  bg-white">
+          <div className="sticky bottom-0 left-0 right-0 flex justify-end gap-2 pt-4 mt-4  bg-white">
           <Button
             variant="secondary"
             onClick={() => onOpenChange(false)}

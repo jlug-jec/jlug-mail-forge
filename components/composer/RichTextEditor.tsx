@@ -68,20 +68,7 @@ export default function RichTextEditor({ value, onChange }: RichTextEditorProps)
         value={value} 
         onChange={onChange}
       />
-      <style jsx global>{`
-        .ql-container {
-          font-size: 16px;
-        }
-        @media (max-width: 640px) {
-          .ql-container {
-            font-size: 14px;
-          }
-          .ql-toolbar {
-            flex-wrap: wrap;
-            justify-content: center;
-          }
-        }
-      `}</style>
+     
     </div>
   )
 }

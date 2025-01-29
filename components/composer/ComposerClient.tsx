@@ -11,6 +11,9 @@ import { EmailPreview } from "./EmailPreview"
 import { ReviewDialog } from "./ReviewDialog"
 import { isValidEmail } from '@/lib/utils'
 
+import { render } from '@react-email/render';
+import { renderEmailContainer } from "../email/emailPreview"
+
 const RichTextEditor = dynamic(() => import("@/components/composer/RichTextEditor"), {
   ssr: false,
   loading: () => <div className="h-[200px] border rounded-md bg-gray-50 animate-pulse" />
@@ -81,6 +84,11 @@ export default function ComposerClient({ initialEmailProvider }: ComposerClientP
       toast.error("Please add at least one recipient email")
       return
     }
+    console.log(content)
+    const reactComponent=renderEmailContainer(JSON.parse(content))
+    const htmlContent = await render(reactComponent,{pretty: true})
+
+
 
     setIsSending(true)
     try {
@@ -91,7 +99,7 @@ export default function ComposerClient({ initialEmailProvider }: ComposerClientP
         },
         body: JSON.stringify({
           subject,
-          content,
+          content: htmlContent,
           from,
           to: emails,
           provider: emailProvider,
