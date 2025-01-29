@@ -1,4 +1,5 @@
 import { ReactElement, ReactNode } from 'react';
+import { ComponentProps } from '../composer/editor/Editor';
 
 
 function extractTextContent(children: ReactNode): string {
@@ -13,7 +14,7 @@ function extractTextContent(children: ReactNode): string {
           return child;
         }
         if (typeof child === 'object' && child !== null) {
-          return extractTextContent((child as ReactElement).props?.children);
+          return extractTextContent((child as any).props?.children);
         }
         return '';
       })
@@ -21,7 +22,7 @@ function extractTextContent(children: ReactNode): string {
   }
   
   if (typeof children === 'object' && children !== null) {
-    return extractTextContent((children as ReactElement).props?.children || '');
+    return extractTextContent((children as any).props?.children || '');
   }
   
   return '';
@@ -30,7 +31,7 @@ function extractTextContent(children: ReactNode): string {
 export function templateToComponents(template: ReactElement): ComponentProps[] {
   const components: ComponentProps[] = [];
   
-  function processElement(element: ReactElement) {
+  function processElement(element: any) {
     if (!element || !element.type) return;
     
     const typeMap: { [key: string]: string } = {

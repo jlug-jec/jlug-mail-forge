@@ -6,7 +6,7 @@ import { usePathname } from "next/navigation"
 import { LayoutDashboard, Users, Mail, FileText, Menu } from "lucide-react"
 import { cn } from "@/lib/utils"
 import { Button } from "@/components/ui/button"
-import { useState } from "react"
+import { useEffect, useState } from "react"
 
 const menuItems = [
   {
@@ -34,16 +34,29 @@ const menuItems = [
 export default function Sidebar() {
   const pathname = usePathname()
   const [isCollapsed, setIsCollapsed] = useState(true)
+  const [isMobile,setIsMobile]=useState(false)
+
+  useEffect(() => {
+    const checkMobile = () => {
+      setIsMobile(window.innerWidth < 768)
+      if (window.innerWidth < 768) {
+        setIsCollapsed(true)
+      }
+    }
+    checkMobile()
+    window.addEventListener('resize', checkMobile)
+    return () => window.removeEventListener('resize', checkMobile)
+  }, [])
 
   return (
     <motion.div
       initial={{ width: 250 }}
-      animate={{ width: isCollapsed ? 70 : 250 }}
+      animate={{ width: isCollapsed ? 70 : isMobile ? "100%" : 250 }}
       className="border-r bg-white h-screen flex flex-col"
     >
       <div className="p-4 border-b flex items-center justify-between">
         {!isCollapsed && (
-          <motion.h1 initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="text-xl font-bold">
+          <motion.h1 initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="text-xl font-bold ">
             <div className="flex items-center">
               <img src="https://jlug.club/assets/JLUG-b26f7b6c.jpg" alt="JLUG Logo" className="h-6 mr-2" />
               JLUG MAIL FORGE

@@ -27,7 +27,7 @@ export default function TemplateList({ templates }: TemplateListProps) {
     ? Object.entries(templates).reduce(
         (acc, [category, templates]) => [
           ...acc,
-          ...templates.map((t: any) => ({ ...t, category })),
+          ...(templates as any[]).map((t: any) => ({ ...t, category })),
         ],
         [] as any[]
       )

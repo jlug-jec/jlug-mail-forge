@@ -1,7 +1,7 @@
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
 import Cookies from 'js-cookie';
-import { templateComponents } from '@/templates';
+import {templateComponents } from '@/templates';
 
 interface TemplateState {
   selectedTemplate: string | null;

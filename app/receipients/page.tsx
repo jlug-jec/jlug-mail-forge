@@ -6,9 +6,9 @@ import WorksheetTable from "@/components/table/WorksheetTable"
 import { cookies } from 'next/headers'
 
 
-export default function RecipientsPage() {
-  const cookieStore = cookies()
-  const sheetId = cookieStore.get('sheetId')
+export default async function RecipientsPage() {
+  const cookieStore = await cookies()
+  const sheetId =cookieStore.get('sheetId')
   const selectedSheet = cookieStore.get('selectedSheet')
   const availableSheets = cookieStore.get('availableSheets')
   const hasRequiredCookies = !!sheetId && !!selectedSheet && !!availableSheets
