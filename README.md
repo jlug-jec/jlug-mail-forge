@@ -2,6 +2,13 @@
 
 A powerful email marketing platform built with Next.js that allows you to manage email campaigns, templates, and recipients efficiently.
 
+## Preview Video
+
+https://github.com/user-attachments/assets/22d7e9d1-79b0-4e23-923e-6647a5d208f0
+
+---
+
+
 ## System Architecture
 
 ```mermaid
