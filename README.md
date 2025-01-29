@@ -2,6 +2,34 @@
 
 A powerful email marketing platform built with Next.js that allows you to manage email campaigns, templates, and recipients efficiently.
 
+## System Architecture
+
+```mermaid
+graph TD
+    A[Client Browser] --> B[Next.js Frontend]
+    B --> C[Authentication]
+    B --> D[Email Composer]
+    B --> E[Template Manager]
+    B --> F[Recipients Manager]
+    
+    C --> G[Auth API]
+    D --> H[Email API]
+    E --> I[Template Store]
+    F --> J[Google Sheets API]
+    
+    H --> K[SMTP2GO]
+    H --> L[Gmail]
+    J --> M[Google Sheets]
+    
+    subgraph Data Storage
+        N[Local Storage]
+        O[Cookies]
+    end
+    
+    B --> N
+    C --> O
+```
+
 ## Features
 
 - 📧 Multi-provider email support (Gmail, SMTP2GO)
@@ -110,13 +138,5 @@ jlug-mail-forge/
 ## License
 
 This project is licensed under the MIT License - see the LICENSE file for details.
-```
-
-
-
-3) status of current emails
-4) any sheets can be loaded 
-
-image.png
 
  
