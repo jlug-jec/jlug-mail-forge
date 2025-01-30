@@ -35,6 +35,7 @@ export function EmailForm({
           onChange={(e) => setFrom(e.target.value)}
           placeholder="Enter sender email"
           className="flex-1"
+          disabled
         />
       </div>
 

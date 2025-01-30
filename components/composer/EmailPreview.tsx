@@ -1,3 +1,5 @@
+// This opens in review dialog box
+
 import {
   Button as EmailButton,
   Head,
@@ -15,7 +17,7 @@ import {
 import { ReactNode } from "react"
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "../ui/dialog"
 import { Badge } from "@/components/ui/badge"
-import { renderEmailContainer } from "../email/emailPreview"
+import { renderEmailContainer } from "../email/LiveEmailreview"
 
 
 

@@ -1,3 +1,4 @@
+// this is live preview
 import {
     Button as EmailButton,
     Container,
@@ -78,7 +79,7 @@ import {
       case "image":
         return (
           <Section key={component.id} style={{ textAlign: component.props.style?.textAlign }}>
-            <Img src={component.content} alt={component.props.alt || ""} width="100%" style={{ maxWidth: "100%" }} />
+            <Img src={component.content || "https://jlug.club/assets/JLUG-b26f7b6c.jpg"} alt={component.props.alt || "alt"} width="100%" style={{ maxWidth: "100%" }} />
           </Section>
         )
       case "divider":
@@ -189,7 +190,7 @@ import {
       case "headerBanner":
         return (
           <Section key={component.id} style={{ margin: "0 0 24px" }}>
-            <Img src={component.content} alt={component.props.alt || ""} width="100%" style={{ maxWidth: "100%" }} />
+            <Img src={component.content || "https://jlug.club/assets/JLUG-b26f7b6c.jpg"} alt={component.props.alt || "alt"} width="100%" style={{ maxWidth: "100%" }} />
           </Section>
         )
       case "link":

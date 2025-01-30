@@ -11,7 +11,7 @@ import { ReviewDialog } from "./ReviewDialog"
 import { isValidEmail } from '@/lib/utils'
 
 import { render } from '@react-email/render';
-import { renderEmailContainer } from "../email/emailPreview"
+import { renderEmailContainer } from "../email/LiveEmailreview"
 import RichTextEditor from "./RichTextEditor"
 import { sendEmail } from '@/app/actions/email'
 
@@ -27,7 +27,7 @@ export default function ComposerClient({ initialEmailProvider }: ComposerClientP
   const [showReview, setShowReview] = useState(false)
   const [isSending, setIsSending] = useState(false)
   const [emailProvider] = useState(initialEmailProvider)
-  const [from, setFrom] = useState("")
+  const [from, setFrom] = useState("recruitment@jlug.club")
   const [newEmail, setNewEmail] = useState("")
   const [showPreview, setShowPreview] = useState(false)
   const { emails, setEmails } = useRecipientStore()
@@ -153,7 +153,6 @@ export default function ComposerClient({ initialEmailProvider }: ComposerClientP
             <div className="space-y-2">
               <label className="text-sm font-medium block">Content:</label>
               <RichTextEditor 
-                key={content || 'empty'} // Add key to force re-render
                 value={content} 
                 onChange={(value) => handleContentChange(value)} 
               />

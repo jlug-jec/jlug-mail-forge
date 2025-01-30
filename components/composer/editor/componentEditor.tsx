@@ -87,7 +87,7 @@ export function ComponentEditor({ component, onChange }: ComponentEditorProps) {
               <input
                 type="text"
                 className={baseInputClass}
-                value={component.props.alt || ""}
+                value={component.props.alt}
                 onChange={(e) => onChange(component.content, { alt: e.target.value })}
                 placeholder="Image alt text"
               />
@@ -121,7 +121,7 @@ export function ComponentEditor({ component, onChange }: ComponentEditorProps) {
                 <div className="mt-2">
                   <img
                     src={component.content || "/placeholder.svg"}
-                    alt={component.props.alt || ""}
+                    alt={component.props.alt || "alt image"}
                     className="max-w-full h-auto"
                     style={{
                       width: component.props.style?.width || 'auto',
@@ -288,7 +288,7 @@ export function ComponentEditor({ component, onChange }: ComponentEditorProps) {
               <input
                 type="text"
                 className={baseInputClass}
-                value={component.props.alt || ""}
+                value={component.props.alt}
                 onChange={(e) => onChange(component.content, { alt: e.target.value })}
                 placeholder="Banner Image alt text"
               />

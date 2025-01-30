@@ -38,45 +38,31 @@ export default function TemplatePreview({ templateId, mode, className }: Props) 
 
       iframeDoc.write(`
         <!DOCTYPE html>
-        <html lang="en">
+        <html>
           <head>
-            <meta charset="utf-8" />
-            <meta name="viewport" content="width=device-width, initial-scale=1" />
+            <meta charset="utf-8">
+            <meta name="viewport" content="width=device-width, initial-scale=1">
             <style>
               body {
                 margin: 0;
-                padding: ${mode === "card" ? "0.5rem" : "1rem"};
+                padding: ${mode === 'card' ? '0.5rem' : '1rem'};
                 font-family: system-ui, -apple-system, sans-serif;
               }
-
-              .email-content {
-                max-width: ${mode === "card" ? "100%" : "600px"};
+              #root {
+                max-width: ${mode === 'card' ? '100%' : '600px'};
                 margin: 0 auto;
                 transform-origin: top left;
-                transform: scale(${mode === "card" ? "0.4" : "0.8"});
+                transform: scale(${mode === 'card' ? '0.4' : '0.8'});
               }
-
               @media (max-width: 768px) {
-                .email-content {
-                  transform: scale(${mode === "card" ? "0.35" : "0.7"});
+                #root {
+                  transform: scale(${mode === 'card' ? '0.35' : '0.7'});
                 }
-              }
-
-              table {
-                border-collapse: collapse;
-              }
-
-              img {
-                display: block;
-                max-width: 100%;
-                height: auto;
               }
             </style>
           </head>
           <body>
-            <div class="email-content">
-              ${bodyContent}
-            </div>
+            ${bodyContent} 
           </body>
         </html>
       `);
