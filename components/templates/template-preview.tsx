@@ -1,93 +1,108 @@
 "use client";
 
-import { templateComponents } from "@/templates";
 import React, { useEffect, useRef } from "react";
-import ReactDOM from "react-dom/client";
+import { renderToString } from "react-dom/server";
+import { templateComponents } from "@/templates";
 
 type Props = {
- templateId: string;
- mode: "card" | "dialog";
- className?: string;
+  templateId: string;
+  mode: "card" | "dialog";
+  className?: string;
 };
 
 export default function TemplatePreview({ templateId, mode, className }: Props) {
- const iframeRef = useRef<HTMLIFrameElement>(null);
- const rootRef = useRef<ReactDOM.Root | null>(null);
+  const iframeRef = useRef<HTMLIFrameElement>(null);
 
- useEffect(() => {
-   const iframe = iframeRef.current;
-   if (!iframe) return;
+  useEffect(() => {
+    const iframe = iframeRef.current;
 
-   const handleLoad = () => {
-     const component = templateComponents[templateId as keyof typeof templateComponents] as React.ComponentType<any>;
-     if (!component) return;
+    if (!iframe) return;
 
-     const iframeDoc = iframe.contentDocument;
-     if (!iframeDoc) return;
+    const handleLoad = () => {
+      const Component = templateComponents[templateId as keyof typeof templateComponents];
 
-     iframeDoc.open();
-     iframeDoc.write(`
-       <!DOCTYPE html>
-       <html>
-         <head>
-           <meta charset="utf-8">
-           <meta name="viewport" content="width=device-width, initial-scale=1">
-           <style>
-             body {
-               margin: 0;
-               padding: ${mode === 'card' ? '0.5rem' : '1rem'};
-               font-family: system-ui, -apple-system, sans-serif;
-             }
-             #root {
-               max-width: ${mode === 'card' ? '100%' : '600px'};
-               margin: 0 auto;
-               transform-origin: top left;
-               transform: scale(${mode === 'card' ? '0.4' : '0.8'});
-             }
-             @media (max-width: 768px) {
-               #root {
-                 transform: scale(${mode === 'card' ? '0.35' : '0.7'});
-               }
-             }
-           </style>
-         </head>
-         <body>
-           <div id="root"></div>
-         </body>
-       </html>
-     `);
-     iframeDoc.close();
+      if (!Component) return;
 
-     const rootDiv = iframeDoc.getElementById("root");
-     if (!rootDiv) return;
+      // Pre-render the component to string
+      const htmlContent = renderToString(<Component userFirstname="Preview" />);
 
-     if (rootRef.current) {
-       rootRef.current.unmount();
-     }
-     rootRef.current = ReactDOM.createRoot(rootDiv);
-     rootRef.current.render(React.createElement(component));
-   };
+      // Extract body content
+      const bodyContent =
+        htmlContent.match(/<body[^>]*>([\s\S]*)<\/body>/i)?.[1] || htmlContent;
 
-   iframe.addEventListener("load", handleLoad);
-   iframe.src = "about:blank";
+      const iframeDoc = iframe.contentDocument;
 
-   return () => {
-     iframe.removeEventListener("load", handleLoad);
-     rootRef.current?.unmount();
-   };
- }, [templateId, mode]);
+      if (!iframeDoc) return;
 
- return (
-   <iframe
-     ref={iframeRef}
-     title={`Email Template Preview - ${templateId}`}
-     className={className}
-     style={{
-       width: "100%",
-       height: "100%", 
-       border: "none",
-       borderRadius: "0.5rem",
-     }}
-   />
- );
+      iframeDoc.open();
+
+      iframeDoc.write(`
+        <!DOCTYPE html>
+        <html lang="en">
+          <head>
+            <meta charset="utf-8" />
+            <meta name="viewport" content="width=device-width, initial-scale=1" />
+            <style>
+              body {
+                margin: 0;
+                padding: ${mode === "card" ? "0.5rem" : "1rem"};
+                font-family: system-ui, -apple-system, sans-serif;
+              }
+
+              .email-content {
+                max-width: ${mode === "card" ? "100%" : "600px"};
+                margin: 0 auto;
+                transform-origin: top left;
+                transform: scale(${mode === "card" ? "0.4" : "0.8"});
+              }
+
+              @media (max-width: 768px) {
+                .email-content {
+                  transform: scale(${mode === "card" ? "0.35" : "0.7"});
+                }
+              }
+
+              table {
+                border-collapse: collapse;
+              }
+
+              img {
+                display: block;
+                max-width: 100%;
+                height: auto;
+              }
+            </style>
+          </head>
+          <body>
+            <div class="email-content">
+              ${bodyContent}
+            </div>
+          </body>
+        </html>
+      `);
+
+      iframeDoc.close();
+    };
+
+    iframe.addEventListener("load", handleLoad);
+    iframe.src = "about:blank";
+
+    return () => {
+      iframe.removeEventListener("load", handleLoad);
+    };
+  }, [templateId, mode]);
+
+  return (
+    <iframe
+      ref={iframeRef}
+      title={`Email Template Preview - ${templateId}`}
+      className={className}
+      style={{
+        width: "100%",
+        height: "100%",
+        border: "none",
+        borderRadius: "0.5rem",
+      }}
+    />
+  );
 }

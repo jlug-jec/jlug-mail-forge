@@ -54,9 +54,9 @@ export function Editor({ value, onChange }: EditorProps) {
     const template = getTemplate();
     if (template) {
       const TemplateComponent = template();
-      const convertedComponents = templateToComponents(TemplateComponent);
+      const convertedComponents =  templateToComponents(TemplateComponent);
+
       setComponents(convertedComponents);
-      updateValue(convertedComponents);
     }
   };
 
@@ -64,7 +64,7 @@ export function Editor({ value, onChange }: EditorProps) {
     if (selectedTemplate) {
       loadTemplate(selectedTemplate);
     }
-  }, [selectedTemplate]);
+  }, []);
 
   const addComponent = (type: string) => {
     const newComponent = {
