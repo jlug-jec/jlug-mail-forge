@@ -9,6 +9,7 @@ import { TablePagination } from "./TablePagination"
 import { LoadingSpinner } from "@/components/ui/loading-spinner"
 import { toast } from "sonner"
 import { useSheetStore } from '@/store/sheet-store'
+import { getWorksheet } from '@/app/actions/sheets'
 
 
 interface WorksheetTableProps {
@@ -66,19 +67,19 @@ export default function WorksheetTable({ initialSheets, initialWorksheet, sheetI
     async function fetchSheetData() {
       setLoading(true)
       try {
-        const response = await fetch(`/api/sheets?worksheet=${currentSheet}&sheetId=${sheetId}`)
-        const data = await response.json()
-        if (!response.ok || !data.data || data.data.length === 0) {
+        const data = await getWorksheet(sheetId, currentSheet)
+        if (!data || data.length === 0) {
           toast.error('No data found in sheet, Choose another sheet')
           setCurrentSheet(initialWorksheet)
-          setSelectedSheet(initialWorksheet) // Update store
+          setSelectedSheet(initialWorksheet)
           return
         }
-        setSheetData(data)
-      } catch (error) {
+        setSheetData({ data })
+      } catch (error: any) {
         console.error('Error fetching sheet data:', error)
+        toast.error(error.message || 'Failed to fetch worksheet data')
         setCurrentSheet(initialWorksheet)
-        setSelectedSheet(initialWorksheet) // Update store
+        setSelectedSheet(initialWorksheet)
       } finally {
         setLoading(false)
       }

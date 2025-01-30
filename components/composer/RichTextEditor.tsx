@@ -1,5 +1,4 @@
 "use client"
-import 'react-quill-new/dist/quill.snow.css';
 import { useState } from "react"
 
 import { useRecipientStore } from '@/store/recipientStore'

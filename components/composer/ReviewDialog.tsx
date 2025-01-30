@@ -2,6 +2,7 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/u
 import { Button } from "@/components/ui/button"
 import { Send, Loader2 } from "lucide-react"
 import { EmailPreview } from "./EmailPreview"
+import { toast } from "sonner"
 
 interface ReviewDialogProps {
   open: boolean
@@ -24,6 +25,7 @@ export function ReviewDialog({
   isSending,
   onSend
 }: ReviewDialogProps) {
+
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="max-w-[95vw] sm:max-w-3xl max-h-[90vh] overflow-y-auto bg-white p-3 sm:p-6">

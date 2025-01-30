@@ -29,9 +29,15 @@ async function handleSheetRequest<T>(
   try {
     const response = await requestFn();
     return transformFn(response.data);
-  } catch (error) {
+  } catch (error: any) {
+    if (error.code === 403) {
+      throw new Error('PERMISSION_DENIED');
+    }
+    if (error.code === 404) {
+      throw new Error('SHEET_NOT_FOUND');
+    }
     console.error('Google Sheets API Error:', error);
-    throw error;
+    throw new Error('API_ERROR');
   }
 }
 
@@ -42,7 +48,6 @@ export async function getSheetDocuments(sheetId: string): Promise<SheetPropertie
       includeGridData: false,
     }),
     (data) => {
-      // Type assertion to ensure we're working with a Spreadsheet response
       const spreadsheetData = data as sheets_v4.Schema$Spreadsheet;
       return spreadsheetData.sheets?.map((sheet) => ({
         id: sheet.properties?.sheetId ?? null,

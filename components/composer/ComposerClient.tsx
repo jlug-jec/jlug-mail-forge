@@ -2,7 +2,6 @@
 
 import { useState, useEffect } from "react"
 import { motion } from "framer-motion"
-import dynamic from "next/dynamic"
 import { toast } from "sonner"
 import { useRecipientStore } from '@/store/recipientStore'
 import { EmailForm } from "./EmailForm"
@@ -14,6 +13,7 @@ import { isValidEmail } from '@/lib/utils'
 import { render } from '@react-email/render';
 import { renderEmailContainer } from "../email/emailPreview"
 import RichTextEditor from "./RichTextEditor"
+import { sendEmail } from '@/app/actions/email'
 
 
 interface ComposerClientProps {
@@ -81,38 +81,35 @@ export default function ComposerClient({ initialEmailProvider }: ComposerClientP
       toast.error("Please add at least one recipient email")
       return
     }
-    const reactComponent=renderEmailContainer(JSON.parse(content))
-    const htmlContent = await render(reactComponent,{pretty: true})
 
-
+    const reactComponent = renderEmailContainer(JSON.parse(content))
+    const htmlContent = await render(reactComponent, { pretty: true })
 
     setIsSending(true)
     try {
-      const response = await fetch('/api/send-email', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          subject,
-          content: htmlContent,
-          from,
-          to: emails,
-          provider: emailProvider,
-        }),
+      const response = await sendEmail({
+        subject,
+        content: htmlContent,
+        from,
+        to: emails,
+        provider: emailProvider,
       })
-
-      if (!response.ok) throw new Error('Failed to send email')
-
-      toast.success('Email sent successfully')
-      setShowReview(false)
-      setContent('')
-      setSubject('')
-      setEmails([])
-      localStorage.removeItem('emailDraft')
-    } catch (error) {
-      toast.error('Failed to send email')
-      console.error(error)
+      
+      if (response.success && response.result?.data?.succeeded > 0) {
+        toast.success('Email sent successfully')
+        setShowReview(false)
+        setContent('')
+        setSubject('')
+        setFrom('')
+        setEmails([])
+        handleContentChange('')
+        localStorage.removeItem('emailDraft')
+      } else {
+        throw new Error(response.error || 'Failed to send email')
+      }
+    } catch (error: any) {
+      toast.error(error.message || 'Failed to send email')
+      console.error('Send email error:', error)
     } finally {
       setIsSending(false)
     }
@@ -156,6 +153,7 @@ export default function ComposerClient({ initialEmailProvider }: ComposerClientP
             <div className="space-y-2">
               <label className="text-sm font-medium block">Content:</label>
               <RichTextEditor 
+                key={content || 'empty'} // Add key to force re-render
                 value={content} 
                 onChange={(value) => handleContentChange(value)} 
               />
@@ -164,9 +162,10 @@ export default function ComposerClient({ initialEmailProvider }: ComposerClientP
 
           <div className="relative p-4 bg-gray-50 border-t">
             <ActionButtons
-              onPreview={() => setShowPreview(true)}
+
               onSaveDraft={saveDraft}
               onReview={() => setShowReview(true)}
+              content={content}
             />
           </div>
         </div>
@@ -191,6 +190,7 @@ export default function ComposerClient({ initialEmailProvider }: ComposerClientP
         isSending={isSending}
         onSend={handleSend}
       />
+
     </>
   )
 }

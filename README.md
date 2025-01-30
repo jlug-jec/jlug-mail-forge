@@ -54,7 +54,8 @@ graph TD
 - **UI Components**: Custom components with Radix UI, Shadcn UI
 - **Styling**: Tailwind CSS
 - **Animations**: Framer Motion
-- **Rich Text Editor**: React Quill
+- **Rich Text Editor**: React Email
+- **Templates**: React Email
 - **State Management**: Zustand
 - **API Integration**: Google Sheets API
 
@@ -76,40 +77,40 @@ cd jlug-mail-forge
 
 2. Install dependencies:
 ```bash
-npm install
+pnpm install
 ```
 
 3. Create a `.env` file in the root directory:
 ```env
-GOOGLE_SHEETS_ID=your_sheet_id
-GOOGLE_SHEETS_API_KEY=your_api_key
-GMAIL_USER=your_gmail
-GMAIL_PASSWORD=your_app_password
+SENDER_EMAIL="email from smtp2go"
+SENDER_PASSWORD="password from smtp2go"
 SMTP2GO_API_KEY=your_smtp2go_key
+GOOGLE_SHEETS_API_KEY=your_api_key
+VERCEL_URL="URL FOR HOSTING TEMPLATE IMAGES"
+ADMIN_USERNAME="admin_username"
+ADMIN_PASSWORD="admin_password"
 ```
 
 4. Start the development server:
 ```bash
-npm run dev
+pnpm dev
 ```
 
 The application will be available at `http://localhost:3000`
 
 ## Project Structure
 
-```
 jlug-mail-forge/
 ├── app/                # Next.js app directory
-│   ├── api/           # API routes
-│   ├── compose/       # Email composition page
-│   └── recipients/    # Recipient management
-├── components/        # React components
-│   ├── composer/      # Email composer components
-│   ├── ui/           # Shared UI components
-│   └── table/        # Data table components
-├── lib/              # Utility functions
-└── store/            # State management
-```
+│   ├── actions/        # Server actions
+│   ├── compose/        # Email composition page
+│   └── login/          # Mock Authentication page
+├── components/         # React components
+│   ├── composer/       # Email composer components
+│   ├── email/         # Email preview components
+│   └── ui/            # Shared UI components
+├── lib/               # Utility functions
+└── store/             # State management
 
 ## Usage
 

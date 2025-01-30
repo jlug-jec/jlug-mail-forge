@@ -3,6 +3,7 @@
 import { motion } from "framer-motion"
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card"
 import { useEffect, useState } from "react"
+import { getSystemStatus } from '@/app/actions/status'
 
 interface SystemStatusData {
   smtp2go: boolean
@@ -33,12 +34,12 @@ export default function SystemStatus() {
   useEffect(() => {
     async function fetchStatus() {
       try {
-        const response = await fetch('/api/status')
-        const data = await response.json()
+        setLoading(true)
+        const data = await getSystemStatus()
         
         setStatus({
           smtp2go: data.emailService,
-          sheets: true, 
+          sheets: data.sheet,
           emailProvider: 'SMTP2GO',
           dailyEmailsSent: data.todayStats.delivered,
           dailyEmailsRemaining: 200 - data.todayStats.delivered,
@@ -49,14 +50,13 @@ export default function SystemStatus() {
         })
       } catch (error) {
         console.error('Failed to fetch status:', error)
+        setStatus(prev => ({ ...prev, smtp2go: false, sheets: false }))
       } finally {
         setLoading(false)
       }
     }
 
     fetchStatus()
-    
-    // Refresh status every 5 minutes
     const interval = setInterval(fetchStatus, 5 * 60 * 1000)
     return () => clearInterval(interval)
   }, [])

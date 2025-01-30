@@ -1,4 +1,5 @@
 "use client"
+
 import { useState } from 'react'
 import { Card } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
@@ -9,6 +10,7 @@ import { motion } from "framer-motion"
 import { LoadingSpinner } from "@/components/ui/loading-spinner"
 import { useSheetStore } from "@/store/sheet-store"
 import { useRouter } from 'next/navigation'
+import { getSheets } from '@/app/actions/sheets'
 
 export function SheetImport() {
   const router = useRouter()
@@ -31,14 +33,11 @@ export function SheetImport() {
         throw new Error('Invalid Google Sheets URL')
       }
 
-      const response = await fetch(`/api/sheets?sheetId=${id}`)
-      const data = await response.json()
-      
-      if (!response.ok) throw new Error(data.error)
+      const sheets = await getSheets(id)
       
       setTempSheetId(id)
-      setWorksheets(data.sheets)
-      setAvailableSheets(data.sheets)
+      setWorksheets(sheets)
+      setAvailableSheets(sheets)
       toast.success('Sheet found! Please select a worksheet')
     } catch (error) {
       toast.error(error instanceof Error ? error.message : 'Failed to import sheet')

@@ -6,6 +6,7 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@
 
 import { Button } from "@/components/ui/button"
 import { ChevronLeft, ChevronRight } from "lucide-react"
+import { fetchCampaigns } from '@/app/actions/campaigns'
 
 
 
@@ -33,16 +34,13 @@ export default function RecentCampaigns() {
   })
 
   useEffect(() => {
-    async function fetchCampaigns() {
+    async function getCampaigns() {
       try {
         setLoading(true)
-        const params = new URLSearchParams({
-          startDate: dateRange.from?.toISOString() || '',
-          endDate: dateRange.to?.toISOString() || ''
-        })
-        const response = await fetch(`/api/campaigns?${params}`)
-        if (!response.ok) throw new Error('Failed to fetch campaigns')
-        const data = await response.json()
+        const data = await fetchCampaigns(
+          dateRange.from?.toISOString(),
+          dateRange.to?.toISOString()
+        )
         setCampaigns(data)
         setError(null)
       } catch (err) {
@@ -53,7 +51,7 @@ export default function RecentCampaigns() {
       }
     }
 
-    fetchCampaigns()
+    getCampaigns()
   }, [dateRange])
 
   const totalPages = Math.ceil(campaigns.length / ITEMS_PER_PAGE)
